@@ -1,0 +1,62 @@
+{
+  "name": "depthai-poe-webapp",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "vue-cli-service build && python3 depthai/main.py",
+    "flash": "vue-cli-service build && python3 depthai/main.py flash"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "bootstrap": "^4.6.0",
+    "core-js": "^3.6.5",
+    "icheck-bootstrap": "^3.0.1",
+    "jquery": "^3.6.0",
+    "list.js": "^2.3.1",
+    "nprogress": "^0.2.0",
+    "popper.js": "^1.16.1",
+    "select2": "^4.1.0-rc.0",
+    "sweetalert": "^2.1.2",
+    "toastr": "^2.1.4",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
+    "vue-axios": "^2.1.5",
+    "axios":"^0.25.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.35.1",
+    "sass-loader": "^10.2.0",
+    "vue-template-compiler": "^2.6.11",
+    "vue-axios": "^2.1.5",
+    "axios":"^0.25.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
