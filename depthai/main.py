@@ -89,13 +89,13 @@ devices = dai.Device.getAllAvailableDevices()
 device_info = None
 for dev_info in devices:
     if dev_info.desc.protocol == dai.X_LINK_TCP_IP:
-        device_info = dev_info 
+        device_info = dev_info
 
 # Connect to a PoE device with pipeline
 if device_info is not None:
     # Ask if for confirmation if flash mode
     if flash_mode:
-        print(f"Are you sure you want to flash device '{device_info.getMxId()}'")
+        print(f"Are you sure you want to flash device '{device_info.getMxId()}' (compress: {compress})")
         print(f"Type 'y' and press enter to proceed, otherwise exits: ")
         if input() != 'y':
             print("Prompt declined, exiting...")
