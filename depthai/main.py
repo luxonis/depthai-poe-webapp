@@ -103,7 +103,8 @@ if device_info is not None:
         with dai.DeviceBootloader(device_info) as bl:
             # Create a progress callback lambda
             progress = lambda p : print(f'Flashing progress: {p*100:.1f}%')
-            bl.flash(progress, pipeline, compress)
+            (success, msg) = bl.flash(progress, pipeline, compress, 'depthai-poe-webapp-v0.1')
+            print(f'Success: {success}, message: {msg}')
     else:
         print(f"Connecting to device '{device_info.getMxId()}'")
         with dai.Device(pipeline, device_info) as device:
@@ -112,3 +113,5 @@ if device_info is not None:
             device.setSystemInformationLoggingRate(0.0)
             while not device.isClosed():
                 time.sleep(1)
+else:
+    print('No devices found')
