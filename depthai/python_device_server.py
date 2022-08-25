@@ -34,11 +34,11 @@ for stream in STREAMS:
     node.info(f"Starting thread for '{stream}' messages")
     frameThread[stream] = threading.Thread(target=readFrameThread, args=(stream, ))
     frameThread[stream].start()
-    
+
 class HTTPHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
-        
+
             # Custom paths first
             if self.path.startswith('/stream/'):
                 stream = self.path.split('/stream/')[1]
@@ -75,10 +75,31 @@ class HTTPHandler(BaseHTTPRequestHandler):
                         if time.time() - timeCounter > 1:
                             node.info(f'FPS: {fpsCounter}')
                             fpsCounter = 0
-                            timeCounter = time.time()        
+                            timeCounter = time.time()
                 except Exception as ex:
                     node.info(f"Streaming '{stream}' stopped")
 
+            elif self.path == '/api/fw_version':
+                version = {
+                    'fw_version': __version__
+                }
+                versionJson = json.dumps(version)
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', len(versionJson))
+                self.end_headers()
+                self.wfile.write(versionJson.encode())
+
+            elif self.path == '/api/device_id':
+                deviceId = {
+                    'device_id': __device_id__
+                }
+                deviceIdJson = json.dumps(deviceId)
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', len(deviceIdJson))
+                self.end_headers()
+                self.wfile.write(deviceIdJson.encode())
             elif self.path == '/api/stats':
                 msg = node.io['sys'].get()
                 stats = {
@@ -134,7 +155,7 @@ class HTTPHandler(BaseHTTPRequestHandler):
 
         except Exception as ex:
             node.info(f'Exception: {str(ex)}')
-                
+
 with ThreadingSimpleServer(("", PORT), HTTPHandler) as httpd:
     node.info(f"Serving at {get_ip_address('re0')}:{PORT}")
     httpd.serve_forever()

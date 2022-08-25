@@ -9,6 +9,39 @@
 
           <div class="col-md">
             <div class="d-flex border">
+              <div class="bg-info text-light p-4">
+                <div class="d-flex align-items-center h-100">
+                  <i class="fa fa-3x fa-fw fa-id-badge"></i>
+                </div>
+              </div>
+              <div class="flex-grow-1 bg-white p-4">
+                <p class="text-uppercase text-secondary mb-0">Device ID</p>
+                <h3 class="font-weight-bold mb-0">{{ deviceId }}</h3>
+              </div>
+            </div>
+          </div>
+
+         <div class="col-md">
+            <div class="d-flex border">
+              <div class="bg-info text-light p-4">
+                <div class="d-flex align-items-center h-100">
+                  <i class="fa fa-3x fa-fw fa-code-branch"></i>
+                </div>
+              </div>
+              <div class="flex-grow-1 bg-white p-4">
+                <p class="text-uppercase text-secondary mb-0">FW Version</p>
+                <h3 class="font-weight-bold mb-0">{{ fwVersion }}</h3>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <h2 class="mb-4">Stats</h2>
+        <div class="row mb-4">
+
+          <div class="col-md">
+            <div class="d-flex border">
               <div class="bg-primary text-light p-4">
                 <div class="d-flex align-items-center h-100">
                   <i class="fa fa-3x fa-fw fa-cog"></i>
@@ -97,7 +130,9 @@ export default {
       memMssUsage: 20,
       memMssTotal: 70,
       tempAverage: 77,
-      alive: true
+      alive: true,
+      fwVersion: '2d804ddd22b8f22f4067ce22772c930417aec6c1',
+      deviceId: '144477AB353FD700'
     }
   },
   mounted () {
@@ -105,6 +140,8 @@ export default {
     console.log('Index mounted');
     this.fetchStats();
     this.alive = true;
+    this.fetchFwVersion();
+    this.fetchDeviceId();
   },
   beforeDestroy(){
     console.log('Index beforeDestroy');
@@ -136,6 +173,22 @@ export default {
           if(this.alive) {
             setTimeout(this.fetchStats, 1000);
           }
+        })
+    },
+    fetchFwVersion(){
+      this.axios
+        .get('/api/fw_version')
+        .then(response => {
+          let d = response.data;
+          this.fwVersion = d['fw_version'];
+        })
+    },
+    fetchDeviceId(){
+      this.axios
+        .get('/api/device_id')
+        .then(response => {
+          let d = response.data;
+          this.deviceId = d['device_id'];
         })
     }
   }

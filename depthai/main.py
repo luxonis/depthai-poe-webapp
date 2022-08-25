@@ -13,10 +13,15 @@ dist_path = SCRIPT_DIRECTORY + '/../dist'
 # Check if flash mode
 flash_mode = False
 compress = False
+check_checksum = False
 if len(sys.argv) > 1 and sys.argv[1] == 'flash':
     flash_mode = True
     if len(sys.argv) > 2 and sys.argv[2] == '--compress':
         compress = True
+        if len(sys.argv) > 3 and sys.argv[3] == '--checksum':
+            check_checksum = True
+
+print(f'Options - flash: {flash_mode}, compress: {compress}, checksum: {check_checksum}')
 
 # Specify port number
 port_number = 8080
@@ -88,7 +93,7 @@ for file in glob:
 devices = dai.Device.getAllAvailableDevices()
 device_info = None
 for dev_info in devices:
-    if dev_info.desc.protocol == dai.X_LINK_TCP_IP:
+    if dev_info.protocol == dai.X_LINK_TCP_IP:
         device_info = dev_info
 
 # Connect to a PoE device with pipeline
@@ -103,7 +108,7 @@ if device_info is not None:
         with dai.DeviceBootloader(device_info) as bl:
             # Create a progress callback lambda
             progress = lambda p : print(f'Flashing progress: {p*100:.1f}%')
-            (success, msg) = bl.flash(progress, pipeline, compress, 'depthai-poe-webapp-v0.1')
+            (success, msg) = bl.flash(progress, pipeline, compress, 'depthai-poe-webapp-v0.1', dai.DeviceBootloader.Memory.AUTO, check_checksum)
             print(f'Success: {success}, message: {msg}')
     else:
         print(f"Connecting to device '{device_info.getMxId()}'")

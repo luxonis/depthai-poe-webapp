@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service build && python3 depthai/main.py",
     "flash": "vue-cli-service build && python3 depthai/main.py flash --compress",
+    "flash_check_checksum": "vue-cli-service build && python3 depthai/main.py flash --compress --checksum",
     "devices": "python3 depthai/list_devices.py"
   },
   "dependencies": {
