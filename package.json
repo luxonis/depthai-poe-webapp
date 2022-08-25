@@ -6,9 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "vue-cli-service build && python3 depthai/main.py",
-    "flash": "vue-cli-service build && python3 depthai/main.py flash --compress",
-    "devices": "python3 depthai/list_devices.py"
+    "start": "vue-cli-service build && python depthai/main.py",
+    "flash": "vue-cli-service build && python depthai/main.py --flash --compress",
+    "devices": "python depthai/list_devices.py",
+    "save": "vue-cli-service build && python depthai/main.py --compress --save "
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",

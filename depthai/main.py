@@ -6,21 +6,28 @@ from string import Template
 from pathlib import Path
 import os
 import sys
+import argparse
 
 SCRIPT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 dist_path = SCRIPT_DIRECTORY + '/../dist'
 
+# Argument parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("--flash", help="Flash the webapp to a discovered PoE device", action="store_true")
+parser.add_argument("--save", help="Specify the path where to save the created DepthAI Application Package")
+parser.add_argument("--compress", help="Specify whether compress and reduce the size of the DepthAI Application Package", action="store_true")
+args = parser.parse_args()
+
 # Check if flash mode
-flash_mode = False
-compress = False
-if len(sys.argv) > 1 and sys.argv[1] == 'flash':
-    flash_mode = True
-    if len(sys.argv) > 2 and sys.argv[2] == '--compress':
-        compress = True
+mode = None
+if args.flash is not None:
+    mode = 'flash'
+if args.save is not None:
+    mode = 'save'
 
 # Specify port number
 port_number = 8080
-if flash_mode:
+if mode != None:
     port_number = 80
 
 # Read the template
@@ -88,14 +95,14 @@ for file in glob:
 devices = dai.Device.getAllAvailableDevices()
 device_info = None
 for dev_info in devices:
-    if dev_info.desc.protocol == dai.X_LINK_TCP_IP:
+    if dev_info.protocol == dai.X_LINK_TCP_IP:
         device_info = dev_info
 
 # Connect to a PoE device with pipeline
-if device_info is not None:
+if device_info is not None or mode == 'save':
     # Ask if for confirmation if flash mode
-    if flash_mode:
-        print(f"Are you sure you want to flash device '{device_info.getMxId()}' (compress: {compress})")
+    if mode == 'flash':
+        print(f"Are you sure you want to flash device '{device_info.getMxId()}' (compress: {args.compress})")
         print(f"Type 'y' and press enter to proceed, otherwise exits: ")
         if input() != 'y':
             print("Prompt declined, exiting...")
@@ -103,8 +110,11 @@ if device_info is not None:
         with dai.DeviceBootloader(device_info) as bl:
             # Create a progress callback lambda
             progress = lambda p : print(f'Flashing progress: {p*100:.1f}%')
-            (success, msg) = bl.flash(progress, pipeline, compress, 'depthai-poe-webapp-v0.1')
+            (success, msg) = bl.flash(progress, pipeline, args.compress, 'depthai-poe-webapp-v0.1')
             print(f'Success: {success}, message: {msg}')
+    elif mode == 'save':
+        dai.DeviceBootloader.saveDepthaiApplicationPackage(args.save, pipeline, args.compress, 'depthai-poe-webapp-v0.1')
+        print(f'Saved DepthAI Application Package to: {args.save}')
     else:
         print(f"Connecting to device '{device_info.getMxId()}'")
         with dai.Device(pipeline, device_info) as device:
