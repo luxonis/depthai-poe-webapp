@@ -20,7 +20,7 @@ args = parser.parse_args()
 
 # Check if flash mode
 mode = None
-if args.flash is not None:
+if args.flash is True:
     mode = 'flash'
 if args.save is not None:
     mode = 'save'
